@@ -1,7 +1,32 @@
 <!DOCTYPE html>
 <html>
-    <head>
-    </head>
-    <body>
-    </body>
+<head>
+    <title>生日快樂</title>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .message {
+            text-align: center;
+            font-size: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="message">
+        <h1>生日快樂！</h1>
+        <p id="birthdayWish">祝您生日快樂，天天開心！</p>
+    </div>
+
+    <script>
+        const birthdayWish = document.getElementById('birthdayWish');
+        birthdayWish.addEventListener('click', function() {
+            alert('祝您生日快樂，願您所有的願望都能實現！');
+        });
+    </script>
+</body>
 </html>
