@@ -9,23 +9,30 @@
             justify-content: center;
             height: 100vh;
             margin: 0;
+            background-color: #f3e5f5;
         }
         .message {
             text-align: center;
             font-size: 30px;
+            animation: color-change 5s infinite;
+        }
+        @keyframes color-change {
+            0% { color: #ff4081; }
+            50% { color: #7e57c2; }
+            100% { color: #ff4081; }
         }
     </style>
 </head>
 <body>
     <div class="message">
         <h1>生日快樂！</h1>
-        <p id="birthdayWish">祝您生日快樂，天天開心！</p>
+        <p id="birthdayWish">祝您生日快樂，天天happy happy!</p>
     </div>
 
     <script>
         const birthdayWish = document.getElementById('birthdayWish');
         birthdayWish.addEventListener('click', function() {
-            alert('祝您生日快樂，願您所有的願望都能實現！');
+            alert('生日快樂!');
         });
     </script>
 </body>
