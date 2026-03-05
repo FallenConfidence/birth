@@ -1,39 +1,248 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-TW">
 <head>
-    <title>生日快樂</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyTorch PPO 強化學習框架</title>
+    
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
     <style>
+        :root {
+            --primary-color: #ee4c2c;
+            --secondary-color: #f5a623;
+            --bg-color: #f8f9fa;
+            --text-color: #333;
+            --card-bg: #ffffff;
+        }
+
         body {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
             margin: 0;
-            background-color: #f3e5f5;
+            padding: 0;
         }
-        .message {
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 4rem 1rem;
             text-align: center;
-            font-size: 30px;
-            animation: color-change 5s infinite;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
-        @keyframes color-change {
-            0% { color: #ff4081; }
-            50% { color: #7e57c2; }
-            100% { color: #ff4081; }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.8rem;
+            letter-spacing: 1px;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 1rem auto 0;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: -2rem auto 3rem;
+            padding: 0 1rem;
+            position: relative;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid #ffeeea;
+            padding-bottom: 0.5rem;
+            margin-top: 0;
+        }
+
+        /* 特色區塊網格 */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .feature-item {
+            background: #fff9f8;
+            padding: 1.5rem;
+            border-left: 4px solid var(--primary-color);
+            border-radius: 6px;
+            transition: transform 0.2s ease;
+        }
+
+        .feature-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(238, 76, 44, 0.1);
+        }
+
+        .feature-item h3 {
+            margin-top: 0;
+            color: #d83a1b;
+        }
+
+        /* 表格樣式 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background-color: #fafafa;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background-color: #fcfcfc;
+        }
+
+        /* 程式碼與標籤 */
+        code {
+            background: #f1f1f1;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Courier New', Courier, monospace;
+            color: #d83a1b;
+            font-size: 0.9em;
+        }
+
+        .math-box {
+            background: #fafafa;
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            border: 1px solid #eee;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #777;
+            font-size: 0.9rem;
         }
     </style>
 </head>
 <body>
-    <div class="message">
-        <h1>生日快樂！</h1>
-        <p id="birthdayWish">生日快樂，happy happy!</p>
+
+    <header>
+        <h1>🚀 PyTorch PPO 強化學習框架</h1>
+        <p>一個基於 PyTorch 與 Gymnasium 打造的高效、模組化且易於擴展的演算法實作，專為連續動作空間任務最佳化。</p>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h2>✨ 核心特色</h2>
+            <div class="features">
+                <div class="feature-item">
+                    <h3>無縫整合 Gymnasium</h3>
+                    <p>自定義的 <code>Env</code> 封裝支援跳幀（Skip Frame）、歷史幀堆疊（History Length）與自動 Monitor 影片錄製。</p>
+                </div>
+                <div class="feature-item">
+                    <h3>動態狀態正規化（Z-Filter）</h3>
+                    <p>內建運行時統計機制，自動對環境的觀測值進行平滑與標準化，有效加速神經網路收斂。</p>
+                </div>
+                <div class="feature-item">
+                    <h3>靈活的神經網路架構</h3>
+                    <p>提供高度客製化的 <code>Policy</code> 與 <code>Value</code> 網路，支援動態隱藏層維度與多種啟動函數（ReLU, Tanh 等）。</p>
+                </div>
+                <div class="feature-item">
+                    <h3>廣義優勢估計（GAE）</h3>
+                    <p>實作穩健的優勢函數計算，透過 $\gamma$ 與 $\lambda$ 參數完美平衡偏差與變異數的拉扯。</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>🧠 數學與演算法基礎</h2>
+            <p>本框架實作了標準的 PPO-Clip 演算法，藉由限制策略更新的幅度來確保訓練的穩定性。其核心的代理目標函數（Surrogate Objective）定義如下：</p>
+            
+            <div class="math-box">
+                $$L^{CLIP}(\theta) = \hat{\mathbb{E}}_t [\min(r_t(\theta)\hat{A}_t, \text{clip}(r_t(\theta), 1-\epsilon, 1+\epsilon)\hat{A}_t)]$$
+            </div>
+            
+            <p>其中 $r_t(\theta)$ 是新舊策略的機率比值，$\epsilon$ 為截斷參數（預設為 0.2）。</p>
+            
+            <p>同時，優勢函數 $\hat{A}_t$ 採用了 GAE（Generalized Advantage Estimation）進行計算，有效降低網路更新梯度的變異數：</p>
+            
+            <div class="math-box">
+                $$\hat{A}_t = \sum_{l=0}^{\infty} (\gamma \lambda)^l \delta_{t+l}$$
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>📂 專案架構概覽</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>模組檔案</th>
+                        <th>功能描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>Train.py</code></td>
+                        <td>訓練流程主程式。負責初始化環境，執行環境互動迴圈並定期觸發網路更新與模型存檔。</td>
+                    </tr>
+                    <tr>
+                        <td><code>Test.py</code></td>
+                        <td>測試與推論腳本。讀取特定階段的模型權重，並透過 <code>render_mode="human"</code> 視覺化展示控制效果。</td>
+                    </tr>
+                    <tr>
+                        <td><code>ppo.py</code></td>
+                        <td>演算法核心。包含 GAE 計算、Actor/Critic 網路更新邏輯，以及 Weights & Biases (WandB) 數據紀錄。</td>
+                    </tr>
+                    <tr>
+                        <td><code>Model.py</code></td>
+                        <td>神經網路定義。包含輸出動作分佈的 <code>Policy</code> 網路與評估狀態價值的 <code>Value</code> 網路。</td>
+                    </tr>
+                    <tr>
+                        <td><code>Env.py</code></td>
+                        <td>環境封裝器。處理 Gymnasium 的重置與步進邏輯，整合過濾器並支援影片錄製。</td>
+                    </tr>
+                    <tr>
+                        <td><code>common.py</code></td>
+                        <td>工具庫。提供 YAML 設定檔存取、常態分配對數機率、數學熵計算與動作映射等通用函式。</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card">
+            <h2>🛠️ 快速上手</h2>
+            <h3>1. 開始訓練模型</h3>
+            <p>設定好 <code>Train.py</code> 中的超參數後，只需執行腳本即可開始收集數據與更新模型。系統會自動建立資料夾、儲存 Checkpoint 並同步數據至 WandB。</p>
+            
+            <h3>2. 測試訓練成果</h3>
+            <p>在 <code>Test.py</code> 中指定您想觀察的 <code>episode</code> 與 <code>score</code>，程式會載入該階段的模型配置，並以視窗渲染的方式展現代理人的操作表現。</p>
+        </div>
     </div>
 
-    <script>
-        const birthdayWish = document.getElementById('birthdayWish');
-        birthdayWish.addEventListener('click', function() {
-            alert('生日快樂!');
-        });
-    </script>
+    <footer>
+        <p>Built with ❤️ using PyTorch & Gymnasium</p>
+    </footer>
+
 </body>
 </html>
