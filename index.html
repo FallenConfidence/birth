@@ -69,6 +69,35 @@
             margin-top: 0;
         }
 
+        /* 影片展示區塊樣式 */
+        .video-container {
+            text-align: center;
+            margin: 2rem 0 1rem;
+            background: #f1f1f1;
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+
+        .video-container video {
+            max-width: 100%;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            /* 限制影片最大高度，避免在電腦螢幕上過大 */
+            max-height: 500px; 
+        }
+
+        .video-caption {
+            margin-top: 1rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #d83a1b;
+            background: #fff9f8;
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            border: 1px solid #ffded6;
+        }
+
         /* 特色區塊網格 */
         .features {
             display: grid;
@@ -153,6 +182,19 @@
     </header>
 
     <div class="container">
+        
+        <div class="card">
+            <h2>🎮 訓練成果展示</h2>
+            <p>透過 PPO 演算法與連續動作空間的最佳化，代理人（Agent）能夠學習到平滑且高效的控制策略。以下是模型在測試環境中的實際表現：</p>
+            <div class="video-container">
+                <video controls autoplay loop muted>
+                    <source src="錄製內容 2026-03-11 140051.mp4" type="video/mp4">
+                    您的瀏覽器不支援 HTML5 影片播放。
+                </video>
+                <div class="video-caption">🏆 Episode: 6585 | Score: 320</div>
+            </div>
+        </div>
+
         <div class="card">
             <h2>✨ 核心特色</h2>
             <div class="features">
