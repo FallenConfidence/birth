@@ -3,22 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PyTorch PPO 強化學習框架</title>
+    <title>PyTorch PPO - Advanced Reinforcement Learning Framework</title>
     
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
     <style>
         :root {
-            --primary-color: #ee4c2c;
-            --secondary-color: #f5a623;
-            --bg-color: #f8f9fa;
-            --text-color: #333;
+            --primary-color: #ee4c2c; /* PyTorch Red */
+            --primary-dark: #c4381c;
+            --secondary-color: #2b2b2b;
+            --bg-color: #f4f6f8;
+            --text-color: #333333;
+            --text-light: #666666;
             --card-bg: #ffffff;
+            --code-bg: #1e1e1e;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             line-height: 1.6;
             color: var(--text-color);
             background-color: var(--bg-color);
@@ -26,264 +29,325 @@
             padding: 0;
         }
 
+        /* 導覽列與頭部 */
         header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            background: var(--secondary-color);
             color: white;
-            padding: 4rem 1rem;
+            padding: 5rem 2rem;
             text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-bottom: 5px solid var(--primary-color);
         }
 
         header h1 {
             margin: 0;
-            font-size: 2.8rem;
-            letter-spacing: 1px;
+            font-size: 3.5rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        header h1 span {
+            color: var(--primary-color);
         }
 
         header p {
             font-size: 1.2rem;
-            opacity: 0.9;
-            max-width: 600px;
-            margin: 1rem auto 0;
+            opacity: 0.8;
+            max-width: 700px;
+            margin: 1.5rem auto 0;
+            font-weight: 300;
+        }
+
+        .badges {
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .badge {
+            background: rgba(255,255,255,0.1);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            border: 1px solid rgba(255,255,255,0.2);
         }
 
         .container {
-            max-width: 1100px;
-            margin: -2rem auto 3rem;
-            padding: 0 1rem;
-            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
         }
 
+        /* 卡片設計 */
         .card {
             background: var(--card-bg);
-            border-radius: 10px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-            padding: 2.5rem;
-            margin-bottom: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            padding: 3rem;
+            margin-bottom: 2.5rem;
         }
 
         h2 {
-            color: var(--primary-color);
-            border-bottom: 2px solid #ffeeea;
+            color: var(--secondary-color);
+            font-size: 2rem;
+            border-bottom: 3px solid var(--primary-color);
             padding-bottom: 0.5rem;
             margin-top: 0;
-        }
-
-        /* 影片展示區塊樣式 */
-        .video-container {
-            text-align: center;
-            margin: 2rem 0 1rem;
-            background: #f1f1f1;
-            padding: 1.5rem;
-            border-radius: 8px;
-        }
-
-        .video-container video {
-            max-width: 100%;
-            border-radius: 6px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            /* 限制影片最大高度，避免在電腦螢幕上過大 */
-            max-height: 500px; 
-        }
-
-        .video-caption {
-            margin-top: 1rem;
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #d83a1b;
-            background: #fff9f8;
             display: inline-block;
-            padding: 0.5rem 1.5rem;
-            border-radius: 20px;
-            border: 1px solid #ffded6;
         }
 
-        /* 特色區塊網格 */
-        .features {
+        /* 影片展示區塊 */
+        .video-wrapper {
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+            margin: 2rem auto;
+            max-width: 800px;
+        }
+
+        video {
+            width: 100%;
+            display: block;
+        }
+
+        .video-info {
+            background: rgba(0,0,0,0.8);
+            color: white;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            font-family: monospace;
+            font-size: 1.1rem;
+        }
+
+        /* 特色與進階機制 Grid */
+        .grid-2 {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
         }
 
-        .feature-item {
-            background: #fff9f8;
-            padding: 1.5rem;
-            border-left: 4px solid var(--primary-color);
-            border-radius: 6px;
-            transition: transform 0.2s ease;
+        .feature-box {
+            padding: 2rem;
+            border: 1px solid #eaeaea;
+            border-radius: 8px;
+            transition: all 0.3s ease;
         }
 
-        .feature-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 8px rgba(238, 76, 44, 0.1);
+        .feature-box:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 5px 15px rgba(238, 76, 44, 0.08);
+            transform: translateY(-5px);
         }
 
-        .feature-item h3 {
+        .feature-box h3 {
+            color: var(--primary-color);
             margin-top: 0;
-            color: #d83a1b;
+            font-size: 1.3rem;
         }
 
-        /* 表格樣式 */
-        table {
+        /* 參數表格 */
+        .spec-table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 1rem;
+            font-family: monospace;
+            font-size: 1rem;
         }
 
-        th, td {
-            padding: 15px;
+        .spec-table th, .spec-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eaeaea;
             text-align: left;
-            border-bottom: 1px solid #eee;
         }
 
-        th {
-            background-color: #fafafa;
-            color: var(--primary-color);
-            font-weight: 600;
+        .spec-table th {
+            background-color: #f9f9f9;
+            color: var(--secondary-color);
+            width: 30%;
         }
 
-        tr:hover {
-            background-color: #fcfcfc;
+        /* 程式碼與數學公式 */
+        .math-container {
+            background: #fdfdfd;
+            border-left: 4px solid var(--primary-color);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+            font-size: 1.1rem;
         }
 
-        /* 程式碼與標籤 */
-        code {
-            background: #f1f1f1;
-            padding: 0.2rem 0.5rem;
-            border-radius: 4px;
-            font-family: 'Courier New', Courier, monospace;
-            color: #d83a1b;
-            font-size: 0.9em;
-        }
-
-        .math-box {
-            background: #fafafa;
-            padding: 1rem;
+        pre {
+            background: var(--code-bg);
+            color: #d4d4d4;
+            padding: 1.5rem;
             border-radius: 8px;
             overflow-x: auto;
-            margin: 1.5rem 0;
-            border: 1px solid #eee;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.95rem;
         }
+
+        .keyword { color: #569cd6; }
+        .string { color: #ce9178; }
+        .comment { color: #6a9955; }
+        .func { color: #dcdcaa; }
 
         footer {
             text-align: center;
-            padding: 2rem;
-            color: #777;
-            font-size: 0.9rem;
+            padding: 3rem;
+            color: var(--text-light);
+            background: white;
+            border-top: 1px solid #eaeaea;
         }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>🚀 PyTorch PPO 強化學習框架</h1>
-        <p>一個基於 PyTorch 與 Gymnasium 打造的高效、模組化且易於擴展的演算法實作，專為連續動作空間任務最佳化。</p>
+        <h1>PyTorch <span>PPO</span> Framework</h1>
+        <p>為連續動作空間 (Continuous Action Space) 打造的工業級強化學習演算法實作，具備高擴展性、動態探索機制與完整的實驗追蹤整合。</p>
+        <div class="badges">
+            <span class="badge">PyTorch 2.0+</span>
+            <span class="badge">Gymnasium</span>
+            <span class="badge">WandB Integration</span>
+            <span class="badge">Continuous Control</span>
+        </div>
     </header>
 
     <div class="container">
         
         <div class="card">
-            <h2>🎮 訓練成果展示</h2>
-            <p>透過 PPO 演算法與連續動作空間的最佳化，代理人（Agent）能夠學習到平滑且高效的控制策略。以下是模型在測試環境中的實際表現：</p>
-            <div class="video-container">
+            <h2>🎮 訓練成果展示：Pendulum-v1</h2>
+            <p>本框架針對連續控制任務進行了深度最佳化。以下是模型在 <code>Pendulum-v1</code> 環境中的推論表現，代理人成功學習到輸出精準連續扭矩以平衡倒立擺的策略。</p>
+            
+            <div class="video-wrapper">
                 <video controls autoplay loop muted>
                     <source src="錄製內容 2026-03-11 140051.mp4" type="video/mp4">
                     您的瀏覽器不支援 HTML5 影片播放。
                 </video>
-                <div class="video-caption">🏆 Episode: 6585 | Score: 320</div>
-            </div>
-        </div>
-
-        <div class="card">
-            <h2>✨ 核心特色</h2>
-            <div class="features">
-                <div class="feature-item">
-                    <h3>無縫整合 Gymnasium</h3>
-                    <p>自定義的 <code>Env</code> 封裝支援跳幀（Skip Frame）、歷史幀堆疊（History Length）與自動 Monitor 影片錄製。</p>
-                </div>
-                <div class="feature-item">
-                    <h3>動態狀態正規化（Z-Filter）</h3>
-                    <p>內建運行時統計機制，自動對環境的觀測值進行平滑與標準化，有效加速神經網路收斂。</p>
-                </div>
-                <div class="feature-item">
-                    <h3>靈活的神經網路架構</h3>
-                    <p>提供高度客製化的 <code>Policy</code> 與 <code>Value</code> 網路，支援動態隱藏層維度與多種啟動函數（ReLU, Tanh 等）。</p>
-                </div>
-                <div class="feature-item">
-                    <h3>廣義優勢估計（GAE）</h3>
-                    <p>實作穩健的優勢函數計算，透過 $\gamma$ 與 $\lambda$ 參數完美平衡偏差與變異數的拉扯。</p>
+                <div class="video-info">
+                    <span>Task: Pendulum-v1</span>
+                    <span>Best Episode: 6585 | Score: 320</span>
                 </div>
             </div>
         </div>
 
         <div class="card">
-            <h2>🧠 數學與演算法基礎</h2>
-            <p>本框架實作了標準的 PPO-Clip 演算法，藉由限制策略更新的幅度來確保訓練的穩定性。其核心的代理目標函數（Surrogate Objective）定義如下：</p>
+            <h2>⚡ 獨家進階機制 (Advanced Features)</h2>
+            <p>有別於基礎的 PPO 實作，本框架加入了多項穩定訓練與加速收斂的工程技巧：</p>
             
-            <div class="math-box">
-                $$L^{CLIP}(\theta) = \hat{\mathbb{E}}_t [\min(r_t(\theta)\hat{A}_t, \text{clip}(r_t(\theta), 1-\epsilon, 1+\epsilon)\hat{A}_t)]$$
+            <div class="grid-2">
+                <div class="feature-box">
+                    <h3>🔍 動態探索增幅 (Exploration Boost)</h3>
+                    <p>為避免模型陷入局部最佳解，系統內建了防停滯機制：當模型連續 200 次更新未打破最高分記錄時，會自動將 Entropy Coefficient（預設 0.00075）放大 3 倍，並持續 300 次更新以強制增加探索範圍。</p>
+                </div>
+                <div class="feature-box">
+                    <h3>📦 DataLoader 批次更新</h3>
+                    <p>在神經網路更新階段，捨棄了簡單的迴圈切片，改用 PyTorch 原生的 <code>TensorDataset</code> 與 <code>DataLoader</code>。每個 Epoch 自動洗牌（Shuffle）並以 256 為 Mini-batch 進行更新，大幅提升梯度下降的穩定性與 GPU 記憶體使用效率。</p>
+                </div>
+                <div class="feature-box">
+                    <h3>📈 Z-Filter 狀態正規化</h3>
+                    <p>實作了 <code>RunningStat</code> 類別，能在環境互動過程中動態計算觀測值（Observations）的平均值與變異數。將狀態進行 Zero-mean 與 Unit-variance 的正規化處理，並支援極端值截斷（Clip），確保神經網路輸入的數值穩定。</p>
+                </div>
+                <div class="feature-box">
+                    <h3>⚙️ 階層式 YAML 配置管理</h3>
+                    <p>所有的超參數、環境設定、網路結構皆透過自定義的 <code>Config</code> 類別進行打包，並能自動序列化儲存為 <code>config.yml</code>。支援在測試階段直接讀取權重對應的環境設定，保證實驗具備 100% 的可重現性。</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>🧠 模型架構與超參數 (Architecture & Hyperparameters)</h2>
+            <div class="grid-2">
+                <div>
+                    <h3>神經網路結構</h3>
+                    <table class="spec-table">
+                        <tr>
+                            <th>Actor (Policy)</th>
+                            <td>MLP [256, 128]</td>
+                        </tr>
+                        <tr>
+                            <th>Critic (Value)</th>
+                            <td>MLP [256, 128]</td>
+                        </tr>
+                        <tr>
+                            <th>啟動函數</th>
+                            <td>LeakyReLU</td>
+                        </tr>
+                        <tr>
+                            <th>動作分佈</th>
+                            <td>獨立學習的可變異數 (log_std)</td>
+                        </tr>
+                        <tr>
+                            <th>優化器</th>
+                            <td>Adam</td>
+                        </tr>
+                    </table>
+                </div>
+                <div>
+                    <h3>PPO 核心參數</h3>
+                    <table class="spec-table">
+                        <tr>
+                            <th>Gamma ($\gamma$)</th>
+                            <td>0.95</td>
+                        </tr>
+                        <tr>
+                            <th>GAE Lambda ($\lambda$)</th>
+                            <td>0.97</td>
+                        </tr>
+                        <tr>
+                            <th>Clip Epsilon ($\epsilon$)</th>
+                            <td>0.2</td>
+                        </tr>
+                        <tr>
+                            <th>Batch Size</th>
+                            <td>2048 steps / update</td>
+                        </tr>
+                        <tr>
+                            <th>Learning Rate</th>
+                            <td>Policy: 1e-4 | Value: 2e-4</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>📐 核心演算法公式</h2>
+            <p>本專案嚴格遵守 PPO-Clip 目標函數的定義，透過截斷新舊策略比率 $r_t(\theta)$ 來限制網路更新幅度：</p>
+            
+            <div class="math-container">
+                $$L^{CLIP}(\theta) = \hat{\mathbb{E}}_t \left[ \min\left(r_t(\theta)\hat{A}_t, \text{clip}(r_t(\theta), 1-\epsilon, 1+\epsilon)\hat{A}_t\right) \right]$$
             </div>
             
-            <p>其中 $r_t(\theta)$ 是新舊策略的機率比值，$\epsilon$ 為截斷參數（預設為 0.2）。</p>
+            <p>優勢函數（Advantage Function）採用 GAE，結合時間差分誤差（TD Error）$\delta_t$ 計算，有效平衡偏差與變異數：</p>
             
-            <p>同時，優勢函數 $\hat{A}_t$ 採用了 GAE（Generalized Advantage Estimation）進行計算，有效降低網路更新梯度的變異數：</p>
-            
-            <div class="math-box">
+            <div class="math-container">
+                $$\delta_t = r_t + \gamma V(s_{t+1}) - V(s_t)$$
                 $$\hat{A}_t = \sum_{l=0}^{\infty} (\gamma \lambda)^l \delta_{t+l}$$
             </div>
+
+            <p>為了鼓勵探索，損失函數中亦加入了常態分佈的熵（Entropy Bonus），其計算方式實作如下：</p>
+
+<pre><code><span class="keyword">def</span> <span class="func">torch_entropy</span>(std):
+    _N = std.shape[-<span class="string">1</span>]
+    log_prod = torch.sum(torch.log(std + EPS), dim=-<span class="string">1</span>)
+    ent = <span class="string">0.5</span> * (np.log((<span class="string">2</span> * np.pi * np.e) ** _N) + <span class="string">2.0</span> * log_prod)
+    <span class="keyword">return</span> ent.mean() <span class="keyword">if</span> ent.dim() > <span class="string">0</span> <span class="keyword">else</span> ent</code></pre>
+
         </div>
 
-        <div class="card">
-            <h2>📂 專案架構概覽</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>模組檔案</th>
-                        <th>功能描述</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><code>Train.py</code></td>
-                        <td>訓練流程主程式。負責初始化環境，執行環境互動迴圈並定期觸發網路更新與模型存檔。</td>
-                    </tr>
-                    <tr>
-                        <td><code>Test.py</code></td>
-                        <td>測試與推論腳本。讀取特定階段的模型權重，並透過 <code>render_mode="human"</code> 視覺化展示控制效果。</td>
-                    </tr>
-                    <tr>
-                        <td><code>ppo.py</code></td>
-                        <td>演算法核心。包含 GAE 計算、Actor/Critic 網路更新邏輯，以及 Weights & Biases (WandB) 數據紀錄。</td>
-                    </tr>
-                    <tr>
-                        <td><code>Model.py</code></td>
-                        <td>神經網路定義。包含輸出動作分佈的 <code>Policy</code> 網路與評估狀態價值的 <code>Value</code> 網路。</td>
-                    </tr>
-                    <tr>
-                        <td><code>Env.py</code></td>
-                        <td>環境封裝器。處理 Gymnasium 的重置與步進邏輯，整合過濾器並支援影片錄製。</td>
-                    </tr>
-                    <tr>
-                        <td><code>common.py</code></td>
-                        <td>工具庫。提供 YAML 設定檔存取、常態分配對數機率、數學熵計算與動作映射等通用函式。</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="card">
-            <h2>🛠️ 快速上手</h2>
-            <h3>1. 開始訓練模型</h3>
-            <p>設定好 <code>Train.py</code> 中的超參數後，只需執行腳本即可開始收集數據與更新模型。系統會自動建立資料夾、儲存 Checkpoint 並同步數據至 WandB。</p>
-            
-            <h3>2. 測試訓練成果</h3>
-            <p>在 <code>Test.py</code> 中指定您想觀察的 <code>episode</code> 與 <code>score</code>，程式會載入該階段的模型配置，並以視窗渲染的方式展現代理人的操作表現。</p>
-        </div>
     </div>
 
     <footer>
-        <p>Built with ❤️ using PyTorch & Gymnasium</p>
+        <p>Built with ❤️ using PyTorch & Gymnasium. Open source project optimized for continuous control.</p>
     </footer>
 
 </body>
